@@ -13,7 +13,7 @@ import java.util.ArrayList;
  * @author Erick
  */
 public class lblListaCompras extends javax.swing.JFrame {
-
+    ArrayList<String> lista = new ArrayList();
     /**
      * Creates new form lblListaCompras
      */
@@ -34,9 +34,10 @@ public class lblListaCompras extends javax.swing.JFrame {
         lblItem = new javax.swing.JLabel();
         txtItem = new javax.swing.JTextField();
         jbtAnadir = new javax.swing.JButton();
-        jbtCancelar = new javax.swing.JButton();
+        btnImprimir = new javax.swing.JButton();
         jbtReiniciar = new javax.swing.JButton();
-        lblLista = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        txtArea = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -49,7 +50,12 @@ public class lblListaCompras extends javax.swing.JFrame {
             }
         });
 
-        jbtCancelar.setText("Cancelar");
+        btnImprimir.setText("Imprimir Lista");
+        btnImprimir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnImprimirActionPerformed(evt);
+            }
+        });
 
         jbtReiniciar.setText("Reiniciar");
         jbtReiniciar.addActionListener(new java.awt.event.ActionListener() {
@@ -58,7 +64,9 @@ public class lblListaCompras extends javax.swing.JFrame {
             }
         });
 
-        lblLista.setText("(Vacio)");
+        txtArea.setColumns(20);
+        txtArea.setRows(5);
+        jScrollPane1.setViewportView(txtArea);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -73,15 +81,15 @@ public class lblListaCompras extends javax.swing.JFrame {
                         .addGap(37, 37, 37)
                         .addComponent(lblItem)
                         .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblLista)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 224, Short.MAX_VALUE)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                 .addGroup(layout.createSequentialGroup()
                                     .addComponent(jbtAnadir)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 66, Short.MAX_VALUE)
-                                    .addComponent(jbtCancelar))
+                                    .addComponent(btnImprimir))
                                 .addComponent(txtItem)))))
-                .addContainerGap(115, Short.MAX_VALUE))
+                .addContainerGap(95, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -93,10 +101,10 @@ public class lblListaCompras extends javax.swing.JFrame {
                 .addGap(26, 26, 26)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jbtAnadir)
-                    .addComponent(jbtCancelar))
-                .addGap(30, 30, 30)
-                .addComponent(lblLista)
-                .addGap(81, 81, 81)
+                    .addComponent(btnImprimir))
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(11, 11, 11)
                 .addComponent(jbtReiniciar)
                 .addContainerGap(24, Short.MAX_VALUE))
         );
@@ -105,36 +113,44 @@ public class lblListaCompras extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jbtAnadirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtAnadirActionPerformed
-        int option = JOptionPane.showConfirmDialog(rootPane, "¿Está seguro?", "Confirmación", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+        
         String tItem = txtItem.getText();
-        ArrayList lista = new ArrayList();
-        if(tItem == null){
-            JOptionPane.showMessageDialog(rootPane, "Ingrese un item a su lista, por favor.");
-            option = 1;
-        }
-        if(option == 0){ 
-            int i = 0;
-            lista.add(i,tItem);
-            for(Object item : lista){
-                lblLista.setText((String)item+"\n");
+        
+        if(!tItem.equals("")){
+            int option = JOptionPane.showConfirmDialog(rootPane, "¿Está seguro?", "Confirmación", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+            if(option == 0){ 
+                this.lista.add(tItem);
+                txtItem.setText("");
+                JOptionPane.showMessageDialog(rootPane, "El elemento se añadió satisfactoriamente a la lista.");
+            }else if (option == 1){
+                JOptionPane.showMessageDialog(rootPane, "El elemento NO se añadió a la lista.");
             }
-            i++;
-            JOptionPane.showMessageDialog(rootPane, "El elemento se añadió satisfactoriamente a la lista.");
-        }else if (option == 1){
-            JOptionPane.showMessageDialog(rootPane, "El elemento NO se añadió a la lista.");
+        }else{
+            JOptionPane.showMessageDialog(rootPane, "Ingrese un item a su lista, por favor.");
         }
-        //System.out.println("option: "+option);
     }//GEN-LAST:event_jbtAnadirActionPerformed
 
     private void jbtReiniciarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtReiniciarActionPerformed
         txtItem.setText("");
-        lblLista.setText("(Vacio)");
+        txtArea.setText("");
+        lista.removeAll(lista);
     }//GEN-LAST:event_jbtReiniciarActionPerformed
+
+    private void btnImprimirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImprimirActionPerformed
+        txtArea.setText("");
+        for(String item : lista){
+                    if(txtArea.getText().equals("")){
+                        txtArea.setText(item);
+                    }else{
+                        txtArea.setText(txtArea.getText()+"\n"+item);
+                    }
+        }
+    }//GEN-LAST:event_btnImprimirActionPerformed
 
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
+    public static void main(String args[]){
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -167,11 +183,12 @@ public class lblListaCompras extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnImprimir;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton jbtAnadir;
-    private javax.swing.JButton jbtCancelar;
     private javax.swing.JButton jbtReiniciar;
     private javax.swing.JLabel lblItem;
-    private javax.swing.JLabel lblLista;
+    private javax.swing.JTextArea txtArea;
     private javax.swing.JTextField txtItem;
     // End of variables declaration//GEN-END:variables
 }
